@@ -1,0 +1,53 @@
+debug:
+  enabled: false
+operator:
+  replicas: 1
+prometheus:
+  enabled: false
+bpf:
+  masquerade: true
+cipv4:
+  enabled: true
+nodePort:
+  enabled: true
+egressGateway:
+  enabled: false
+ipam:
+  mode: "cluster-pool"
+  operator:
+    clusterPoolIPv4PodCIDRList: 
+      - 10.244.0.0/16
+    clusterPoolIPv4MaskSize: 24
+l7Proxy: false  
+kubeProxyReplacement: strict
+k8sServiceHost: 192.168.124.241
+k8sServicePort: 6443
+securityContext:
+  capabilities:
+    ciliumAgent:
+      - CHOWN
+      - KILL
+      - NET_ADMIN
+      - NET_RAW
+      - IPC_LOCK
+      - SYS_ADMIN
+      - SYS_RESOURCE
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+    cleanCiliumState:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_RESOURCE            
+cgroup:
+  autoMount:
+    enabled: false
+  hostRoot: /sys/fs/cgroup                    
+externalWorkloads:
+  enabled: false
+hubble:
+  relay: 
+    enabled: false
+  ui:
+    enabled: false

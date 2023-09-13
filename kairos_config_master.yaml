@@ -1,0 +1,52 @@
+#cloud-config
+
+debug: true
+growpart:
+    devices:
+        - /
+hostname: k8s-master
+install:
+    auto: true
+    bind_mounts:
+        - /etc/kubernetes/
+        - /var/lib/etcd/
+        - /var/lib/kubelet/
+    device: /dev/vda
+    firmware: bios
+    force: true
+    grub-entry-name: Kairos
+    no-format: false
+    part-table: gpt
+    partitions:
+        oem:
+            fs: ext4
+            size: 60
+        recovery:
+            fs: ext4
+            size: 4096
+    poweroff: false
+    reboot: true
+reset:
+    grub-entry-name: Kairos
+    poweroff: true
+    reboot: true
+    reset-oem: false
+    reset-persistent: true
+strict: true
+upgrade:
+    grub-entry-name: Kairos
+    poweroff: false
+    reboot: true
+    recovery: false
+users:
+    - lock_passwd: true
+      name: kairos
+      passwd: kairos
+      ssh_authorized_keys:
+        - ssh-rsa KEY
+write_files:
+- content: LS0tCmFwaVNlcnZlcjoKICAgIGV4dHJhQXJnczoKICAgICAgYXV0aG9yaXphdGlvbi1tb2RlOiBOb2RlLFJCQUMKICAgIHRpbWVvdXRGb3JDb250cm9sUGxhbmU6IDRtMHMKYXBpVmVyc2lvbjoga3ViZWFkbS5rOHMuaW8vdjFiZXRhMwpjZXJ0aWZpY2F0ZXNEaXI6IC9ldGMva3ViZXJuZXRlcy9wa2kKY2x1c3Rlck5hbWU6IGs4cy11YnVudHUKY29udHJvbGxlck1hbmFnZXI6IHt9CmRuczoge30KZXRjZDoKICBsb2NhbDoKICAgIGRhdGFEaXI6IC92YXIvbGliL2V0Y2QKaW1hZ2VSZXBvc2l0b3J5OiByZWdpc3RyeS5rOHMuaW8Ka2luZDogQ2x1c3RlckNvbmZpZ3VyYXRpb24KbmV0d29ya2luZzoKICAgIGRuc0RvbWFpbjogY2x1c3Rlci5sb2NhbAogICAgcG9kU3VibmV0OiAxMC4yNDQuMC4wLzE2CiAgICBzZXJ2aWNlU3VibmV0OiAxMC45Ni4wLjAvMTgKc2NoZWR1bGVyOiB7fQotLS0KYXBpVmVyc2lvbjoga3ViZWxldC5jb25maWcuazhzLmlvL3YxYmV0YTEKa2luZDogS3ViZWxldENvbmZpZ3VyYXRpb24Kc2VydmVyVExTQm9vdHN0cmFwOiB0cnVlCi0tLQphcGlWZXJzaW9uOiBrdWJlYWRtLms4cy5pby92MWJldGEzCmtpbmQ6IEluaXRDb25maWd1cmF0aW9uCm5vZGVSZWdpc3RyYXRpb246CiAgY3JpU29ja2V0OiAiL3J1bi9jb250YWluZXJkL2NvbnRhaW5lcmQuc29jayIKLS0tCg==
+  encoding: b64
+  owner: root
+  path: /etc/kubernetes/kubeadm-config.yaml
+  permissions: "0644"          

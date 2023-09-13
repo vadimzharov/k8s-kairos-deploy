@@ -1,0 +1,60 @@
+#cloud-config
+
+debug: true
+growpart:
+    devices:
+        - /
+install:
+    auto: true
+    bind_mounts:
+        - /etc/kubernetes/
+        - /var/lib/etcd/
+        - /var/lib/kubelet/
+    device: /dev/vda
+    firmware: bios
+    force: true
+    grub-entry-name: Kairos
+    no-format: false
+    part-table: gpt
+    partitions:
+        oem:
+            fs: ext4
+            size: 60
+        recovery:
+            fs: ext4
+            size: 4096
+    poweroff: false
+    reboot: true
+reset:
+    grub-entry-name: Kairos
+    poweroff: true
+    reboot: true
+    reset-oem: false
+    reset-persistent: true
+strict: true
+upgrade:
+    grub-entry-name: Kairos
+    poweroff: false
+    reboot: true
+    recovery: false
+stages:
+  initramfs:
+    - name: "Setup hostname"
+      hostname: "node-{{ trunc 4 .MachineID }}"
+  boot:
+    - name: "Write kubeconfig.join"
+      files:
+        - content: kubeconfig.join base 64 encoded config.
+          encoding: b64
+          path: /etc/kubernetes/kubeconfig.join
+    - name: "Join k8s cluster"
+      commands:
+        - kubeadm join --discovery-file /etc/kubernetes/kubeconfig.join
+      if: "[ ! -e /var/lib/kubelet/config.yaml ]"
+
+users:
+    - lock_passwd: true
+      name: kairos
+      passwd: kairos
+      ssh_authorized_keys:
+        - ssh-rsa KEY
